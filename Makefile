@@ -13,14 +13,14 @@ tf-apply:
 	$(call header, Applying plan for $(ENVIRONMENT)...)
 	(cd infrastructure && terraform apply)
 
-build-functions:
-	$(call header, Building functions...)
-	(cd functions/test && tsc)
+build-containers:
+	$(call header, Building containers...)
+	(cd containers/api && tsc)
 
 docker-compose:
-	$(call header, Running functions...)
-	(cd functions && docker compose build && docker compose up)
+	$(call header, Running containers...)
+	(cd containers && docker compose build && docker compose up)
 
-deploy-test: build-functions
-	$(call header, Deploy test function...)
-	(docker build functions/test -t gcr.io/ava-ai-322720/test-function && docker push gcr.io/ava-ai-322720/test-function)
+deploy-api: build-containers
+	$(call header, Deploy api...)
+	(docker build containers/api -t gcr.io/ava-ai-322720/api && docker push gcr.io/ava-ai-322720/api)

@@ -49,7 +49,7 @@ module "iot-core" {
 
 module "cloud_run" {
   source  = "./modules/cloudrun"
-  name    = "test-function"
-  image   = "gcr.io/${var.project}/test-function"
+  name    = "api"
+  image   = "gcr.io/${var.project}/api"
   project = var.project
 }

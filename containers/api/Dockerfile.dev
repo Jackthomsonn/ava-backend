@@ -6,12 +6,12 @@ COPY package*.json ./
 
 RUN npm ci
 
+RUN npm i ts-node-dev -g
+
 COPY . .
 
 ENV PORT=3000
 
 EXPOSE $PORT
-
-ENTRYPOINT [ "npx" ]
 
 CMD [ "ts-node-dev", "index.ts" ]

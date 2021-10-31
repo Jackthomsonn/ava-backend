@@ -4,7 +4,7 @@ const app = express();
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.status(200).json({
-    test_result: true,
+    hello: "world3",
   });
 });
 
