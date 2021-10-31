@@ -7,3 +7,8 @@ variable "topic_name" {
   type        = string
   description = "The name of topic to create"
 }
+
+variable "project" {
+  type        = string
+  description = "The name of the project to create the pub/sub in"
+}

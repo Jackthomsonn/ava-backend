@@ -18,8 +18,9 @@ resource "google_cloudiot_registry" "ava_registry" {
 }
 
 resource "google_pubsub_subscription" "ava_event_subscription" {
-  name  = "${var.registry_name}-event-subscription"
-  topic = "${var.registry_name}-event"
+  name    = "${var.registry_name}-event-subscription"
+  project = var.project
+  topic   = "${var.registry_name}-event"
 
   ack_deadline_seconds = 20
 
@@ -29,8 +30,9 @@ resource "google_pubsub_subscription" "ava_event_subscription" {
 }
 
 resource "google_pubsub_subscription" "ava_state_subscription" {
-  name  = "${var.registry_name}-state-subscription"
-  topic = "${var.registry_name}-state"
+  name    = "${var.registry_name}-state-subscription"
+  project = var.project
+  topic   = "${var.registry_name}-state"
 
   ack_deadline_seconds = 20
 

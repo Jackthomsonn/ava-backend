@@ -6,3 +6,4 @@ infrastructure/terraform.tfstate
 infrastructure/terraform.tfstate.d/dev/terraform.tfstate.backup
 infrastructure/terraform.tfstate.d/dev/terraform.tfstate
 infrastructure/.terraform/modules/modules.json
+**/node_modules

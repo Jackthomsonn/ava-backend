@@ -27,6 +27,18 @@ resource "google_project_service" "iot" {
   disable_dependent_services = true
 }
 
+resource "google_project_service" "cloud_run" {
+  project = var.project
+  service = "run.googleapis.com"
+
+  timeouts {
+    create = "30m"
+    update = "40m"
+  }
+
+  disable_dependent_services = true
+}
+
 module "iot-core" {
   source              = "./modules/cloudiot"
   registry_name       = terraform.workspace
@@ -35,8 +47,9 @@ module "iot-core" {
   state_push_endpoint = "https://example.${terraform.workspace}.com/state"
 }
 
-module "pub_sub_example" {
-  source     = "./modules/pubsub"
-  endpoint   = "https://example.${terraform.workspace}.com/pubsub"
-  topic_name = "example_topic"
+module "cloud_run" {
+  source  = "./modules/cloudrun"
+  name    = "test-function"
+  image   = "gcr.io/${var.project}/test-function"
+  project = var.project
 }
