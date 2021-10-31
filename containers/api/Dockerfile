@@ -14,4 +14,4 @@ ENV PORT=3000
 
 EXPOSE $PORT
 
-CMD [ "node", "index.js" ]
+CMD [ "node", "dist/main.js" ]
