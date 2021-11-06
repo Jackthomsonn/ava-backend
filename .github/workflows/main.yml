@@ -1,0 +1,12 @@
+name: Ava CI
+
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy API
+        run: make deploy-api
