@@ -15,41 +15,61 @@ provider "google-beta" {
   zone    = var.zone
 }
 
-resource "google_project_service" "iot" {
-  project = var.project
-  service = "cloudiot.googleapis.com"
+module "project-services" {
+  source     = "terraform-google-modules/project-factory/google//modules/project_services"
+  version    = "3.3.0"
+  project_id = var.project
 
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
+  activate_apis = [
+    "cloudiot.googleapis.com",
+    "run.googleapis.com",
+  ]
 
-  disable_dependent_services = true
+  disable_services_on_destroy = true
+  disable_dependent_services  = true
 }
 
-resource "google_project_service" "cloud_run" {
-  project = var.project
-  service = "run.googleapis.com"
+module "ci_cd_service_account" {
+  source        = "terraform-google-modules/service-accounts/google"
+  display_name  = "CI/CD Service Account"
+  version       = "~> 3.0"
+  project_id    = var.project
+  generate_keys = true
+  description   = "Service account for CI/CD client"
+  names         = ["continuousintegration"]
+  project_roles = [
+    "${var.project}=>roles/run.admin",
+    "${var.project}=>roles/storage.objectViewer",
+    "${var.project}=>roles/storage.admin",
+    "${var.project}=>roles/iam.serviceAccountUser",
+  ]
+}
 
-  timeouts {
-    create = "30m"
-    update = "40m"
-  }
-
-  disable_dependent_services = true
+module "elixir_app_service_account" {
+  source        = "terraform-google-modules/service-accounts/google"
+  display_name  = "Elixir Service Account"
+  version       = "~> 3.0"
+  project_id    = var.project
+  generate_keys = true
+  description   = "Service account for the Elixir App client"
+  names         = ["elixirapp"]
+  project_roles = [
+    "${var.project}=>roles/editor"
+  ]
 }
 
 module "iot-core" {
-  source              = "./modules/cloudiot"
+  source = "./modules/cloudiot"
+
   registry_name       = terraform.workspace
   project             = var.project
   event_push_endpoint = "https://example.${terraform.workspace}.com/event"
   state_push_endpoint = "https://example.${terraform.workspace}.com/state"
 }
 
-module "cloud_run" {
-  source  = "./modules/cloudrun"
-  name    = "${terraform.workspace}-api"
-  image   = "gcr.io/${var.project}/${terraform.workspace}-api"
+module "cloud-run" {
+  source = "./modules/cloudrun"
+
+  name    = "api"
   project = var.project
 }

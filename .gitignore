@@ -1,10 +1,8 @@
 infrastructure/service-account.json
-infrastructure/.terraform/providers/registry.terraform.io/hashicorp/google/3.5.0/darwin_amd64/terraform-provider-google_v3.5.0_x5
-infrastructure/.terraform/providers/registry.terraform.io/hashicorp/google-beta/3.90.0/darwin_amd64/terraform-provider-google-beta_v3.90.0_x5
-infrastructure/.terraform.lock.hcl
-infrastructure/terraform.tfstate
-infrastructure/terraform.tfstate.d/dev/terraform.tfstate.backup
-infrastructure/terraform.tfstate.d/dev/terraform.tfstate
-infrastructure/.terraform/modules/modules.json
+infrastructure/.terraform
 **/node_modules
 **/dist
+infrastructure/terraform.tfstate.d/dev/terraform.tfstate.backup
+infrastructure/.terraform.lock.hcl
+infrastructure/terraform.tfstate.d/dev/terraform.tfstate
+infrastructure/terraform.tfstate

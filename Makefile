@@ -1,5 +1,6 @@
-ENVIRONMENT ?= dev
+WORKSPACE ?= dev
 PROJECT ?= ava-ai-322720
+REGION ?= us-central1
 
 define header
   $(info $(START)▶▶▶ $(1)$(END))
@@ -10,11 +11,11 @@ set-project:
 	gcloud config set project $(PROJECT)
 
 tf-plan:
-	$(call header, Creating plan for $(ENVIRONMENT)...)
-	(cd infrastructure && terraform workspace select $(ENVIRONMENT) && terraform plan)
+	$(call header, Creating plan for $(WORKSPACE)...)
+	(cd infrastructure && terraform workspace select $(WORKSPACE) && terraform plan)
 
 tf-apply:
-	$(call header, Applying plan for $(ENVIRONMENT)...)
+	$(call header, Applying plan for $(WORKSPACE)...)
 	(cd infrastructure && terraform apply)
 
 build-containers:
@@ -26,7 +27,7 @@ docker-compose:
 	(cd containers && docker compose build && docker compose up)
 
 deploy-api: set-project
-	$(call header, Deploy api for project $(PROJECT) in environment $(ENVIRONMENT)...)
-	docker build containers/api -t gcr.io/$(PROJECT)/$(ENVIRONMENT)-api && \
-	docker push gcr.io/$(PROJECT)/$(ENVIRONMENT)-api && \
-	gcloud run deploy $(ENVIRONMENT)-api --image=gcr.io/$(PROJECT)/$(ENVIRONMENT)-api --region us-central1 --platform managed --allow-unauthenticated
+	$(call header, Deploy api for project $(PROJECT) in workspace $(WORKSPACE)...)
+	docker build containers/api -t gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
+	docker push gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
+	gcloud run deploy $(WORKSPACE)-api --image=gcr.io/$(PROJECT)/$(WORKSPACE)-api --region $(REGION) --platform managed --allow-unauthenticated

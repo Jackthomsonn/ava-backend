@@ -9,13 +9,13 @@ data "google_iam_policy" "noauth" {
 
 resource "google_cloud_run_service" "default" {
   project  = var.project
-  name     = var.name
+  name     = "${terraform.workspace}-${var.name}"
   location = "us-central1"
 
   template {
     spec {
       containers {
-        image = var.image
+        image = "gcr.io/${var.project}/${terraform.workspace}-${var.name}"
       }
     }
   }
