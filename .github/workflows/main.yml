@@ -13,6 +13,9 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
+
       - uses: actions/checkout@v2
+      - name: Setup Docker
+        run: gcloud auth configure-docker -q
       - name: Deploy API
         run: make deploy-api
