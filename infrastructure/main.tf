@@ -49,7 +49,7 @@ module "iot-core" {
 
 module "cloud_run" {
   source  = "./modules/cloudrun"
-  name    = "api"
-  image   = "gcr.io/${var.project}/api"
+  name    = "${terraform.workspace}-api"
+  image   = "gcr.io/${var.project}/${terraform.workspace}-api"
   project = var.project
 }
