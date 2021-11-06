@@ -48,7 +48,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(APIModule, { logger });
 
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe({ forbidUnknownValues: true }));
 
   await app.listen(env.PORT);
 }
