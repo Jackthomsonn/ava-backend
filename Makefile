@@ -25,7 +25,7 @@ docker-compose:
 	$(call header, Running containers...)
 	(cd containers && docker compose build && docker compose up)
 
-deploy-api: set-project build-containers
+deploy-api: set-project
 	$(call header, Deploy api for project $(PROJECT) in environment $(ENVIRONMENT)...)
 	docker build containers/api -t gcr.io/$(PROJECT)/$(ENVIRONMENT)-api && \
 	docker push gcr.io/$(PROJECT)/$(ENVIRONMENT)-api && \
