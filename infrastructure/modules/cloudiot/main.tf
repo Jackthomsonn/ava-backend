@@ -1,11 +1,25 @@
+resource "google_pubsub_topic" "event_topic" {
+  name    = "${terraform.workspace}-event"
+  project = var.project
+}
+
+resource "google_pubsub_topic" "state_topic" {
+  name    = "${terraform.workspace}-state"
+  project = var.project
+}
+
 resource "google_cloudiot_registry" "ava_registry" {
   name    = var.registry_name
   project = var.project
   region  = var.region
 
   event_notification_configs {
-    pubsub_topic_name = "projects/${var.project}/topics/${var.registry_name}-event"
+    pubsub_topic_name = google_pubsub_topic.event_topic.id
     subfolder_matches = "event"
+  }
+
+  state_notification_config = {
+    pubsub_topic_name = google_pubsub_topic.state_topic.id
   }
 
   mqtt_config = {
@@ -22,7 +36,7 @@ resource "google_cloudiot_registry" "ava_registry" {
 resource "google_pubsub_subscription" "ava_event_subscription" {
   name    = "${var.registry_name}-event-subscription"
   project = var.project
-  topic   = "${var.registry_name}-event"
+  topic   = google_pubsub_topic.event_topic.id
 
   ack_deadline_seconds = 20
 
@@ -34,7 +48,7 @@ resource "google_pubsub_subscription" "ava_event_subscription" {
 resource "google_pubsub_subscription" "ava_state_subscription" {
   name    = "${var.registry_name}-state-subscription"
   project = var.project
-  topic   = "${var.registry_name}-state"
+  topic   = google_pubsub_topic.state_topic.id
 
   ack_deadline_seconds = 20
 
