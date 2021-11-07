@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { CommandModule } from "./services/command/command.module";
+import { CommandModule } from "./command/command.module";
 
 @Module({
   imports: [
