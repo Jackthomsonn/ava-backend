@@ -1,8 +1,20 @@
+module "cloud_run_service_account" {
+  source       = "terraform-google-modules/service-accounts/google"
+  display_name = "${var.name} cloud run service account"
+  version      = "~> 3.0"
+  project_id   = var.project
+  description  = "Service account for ${var.name} Cloud Run instance"
+  names        = ["${var.name}cloudrun"]
+  project_roles = [
+    "${var.project}=>roles/run.admin"
+  ]
+}
+
 data "google_iam_policy" "noauth" {
   binding {
     role = "roles/run.invoker"
     members = [
-      "allUsers",
+      "allUsers"
     ]
   }
 }
@@ -17,6 +29,7 @@ resource "google_cloud_run_service" "default" {
       containers {
         image = "gcr.io/${var.project}/${terraform.workspace}-${var.name}"
       }
+      service_account_name = module.cloud_run_service_account.email
     }
   }
 
