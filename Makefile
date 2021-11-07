@@ -30,6 +30,10 @@ docker-compose:
 	$(call header, Running containers...)
 	(cd containers && docker compose build && docker compose up)
 
+unit-tests:
+	$(call header, Running unit tests...)
+	(cd containers/api && npx jest)
+
 deploy-api: set-project
 	$(call header, Deploy api for project $(PROJECT) in workspace $(WORKSPACE)...)
 	docker build containers/api -t gcr.io/$(PROJECT)/$(WORKSPACE)-api && \

@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, ValidationPipe } from "@nestjs/common";
-import { GetCommandResponse, SendCommandDTO } from "../../shared/types/command";
+import { Body, Controller, Get, Post } from "@nestjs/common";
+import { GetCommandResponse, SendCommandDTO, SendCommandResponse } from "../shared/types/command";
 import { CommandService } from "./command.service";
 
 @Controller()
@@ -12,7 +12,7 @@ export class CommandController {
   }
 
   @Post()
-  sendCommand(@Body() sendCommandDTO: SendCommandDTO): object {
+  sendCommand(@Body() sendCommandDTO: SendCommandDTO): SendCommandResponse {
     return this.commandService.sendCommand(sendCommandDTO);
   }
 }

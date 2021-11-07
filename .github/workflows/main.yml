@@ -15,7 +15,12 @@ jobs:
           export_default_credentials: true
 
       - uses: actions/checkout@v2
+
+      - name: Run unit tests
+        run: make unit-tests
+
       - name: Setup Docker
         run: gcloud auth configure-docker -q
+
       - name: Deploy API
         run: make deploy-api

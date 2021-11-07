@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SendCommand, SendCommandResponse, CommandStatus, GetCommandResponse } from '../../shared/types/command';
+import { SendCommand, SendCommandResponse, CommandStatus, GetCommandResponse } from '../shared/types/command';
 
 @Injectable()
 export class CommandService {
