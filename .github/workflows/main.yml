@@ -11,8 +11,14 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run unit tests
-      run: cd containers/api && npm i && cd ../../ && make unit-tests
+      run: >
+        cd containers/api &&
+        npm i &&
+        cd ../../ &&
+        make unit-tests
+
   deploy:
+    needs: unit-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
