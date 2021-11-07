@@ -10,6 +10,10 @@ set-project:
 	$(call header, "Setting project to $(PROJECT)...")
 	gcloud config set project $(PROJECT)
 
+tf-init:
+	$(call header, Initializing terraform for $(WORKSPACE)...)
+	(cd infrastructure && terraform workspace select $(WORKSPACE) && terraform init)
+
 tf-plan:
 	$(call header, Creating plan for $(WORKSPACE)...)
 	(cd infrastructure && terraform workspace select $(WORKSPACE) && terraform plan)

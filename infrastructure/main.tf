@@ -15,7 +15,7 @@ provider "google-beta" {
   zone    = var.zone
 }
 
-module "project-services" {
+module "project_services" {
   source     = "terraform-google-modules/project-factory/google//modules/project_services"
   version    = "3.3.0"
   project_id = var.project
@@ -58,16 +58,17 @@ module "elixir_app_service_account" {
   ]
 }
 
-module "iot-core" {
+module "iot_core" {
   source = "./modules/cloudiot"
 
   registry_name       = terraform.workspace
   project             = var.project
+  region              = var.region
   event_push_endpoint = "https://example.${terraform.workspace}.com/event"
   state_push_endpoint = "https://example.${terraform.workspace}.com/state"
 }
 
-module "cloud-run" {
+module "cloud_run" {
   source = "./modules/cloudrun"
 
   name    = "api"

@@ -8,6 +8,11 @@ variable "project" {
   description = "The name of the project"
 }
 
+variable "region" {
+  type        = string
+  description = "The region to create the registry in"
+}
+
 variable "event_push_endpoint" {
   type        = string
   description = "The endpoint an event should be pushed to"

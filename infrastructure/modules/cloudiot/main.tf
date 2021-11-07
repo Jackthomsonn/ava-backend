@@ -1,5 +1,7 @@
 resource "google_cloudiot_registry" "ava_registry" {
-  name = var.registry_name
+  name    = var.registry_name
+  project = var.project
+  region  = var.region
 
   event_notification_configs {
     pubsub_topic_name = "projects/${var.project}/topics/${var.registry_name}-event"
