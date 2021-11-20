@@ -1,13 +1,8 @@
 import { Module } from "@nestjs/common";
-import { CommandController } from "./command.controller";
+import { CommandResolver } from "./command.resolver";
 import { CommandService } from "./command.service";
 
 @Module({
-  controllers: [
-    CommandController,
-  ],
-  providers: [
-    CommandService,
-  ],
+  providers: [CommandService, CommandResolver],
 })
-export class CommandModule { }
+export class CommandModule {}

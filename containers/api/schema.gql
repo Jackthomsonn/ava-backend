@@ -1,0 +1,43 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Command {
+  """The name of the command"""
+  name: String!
+}
+
+type Mutation {
+  """Send a command to the device"""
+  sendCommand(command: SendCommandInput!): SendCommandResponse!
+}
+
+enum PossibleCommand {
+  HUE
+  SENSOR
+  SONOS
+}
+
+type Query {
+  """Get all command providers"""
+  getProviders: [Command!]!
+}
+
+input SendCommandInput {
+  """The name of the command"""
+  command: PossibleCommand!
+
+  """The data for this specific device. Must be supplied as a string"""
+  data: String!
+}
+
+type SendCommandResponse {
+  """The name of the executed provider"""
+  executed_provider: String!
+
+  """The message of the executed command"""
+  message: String!
+
+  """The status of the executed command"""
+  status: String!
+}

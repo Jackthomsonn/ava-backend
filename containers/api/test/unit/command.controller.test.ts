@@ -1,62 +1,39 @@
-import { CommandStatus } from "../../shared/types/command";
-import { CommandController } from "../../command/command.controller";
-import { CommandService } from "../../command/command.service";
+import { CommandStatus, PossibleCommand } from "../../command/types/command";
 
-describe('CommandController', () => {
-  let commandController: CommandController;
+import { CommandService } from "../../command/command.service";
+import { CommandResolver } from "command/command.resolver";
+
+describe("CommandController", () => {
+  let commandResolver: CommandResolver;
   let commandService: CommandService;
 
   beforeEach(() => {
     commandService = new CommandService();
-    commandController = new CommandController(commandService);
+    commandResolver = new CommandResolver(commandService);
   });
 
-  describe('getCommands', () => {
-    it('should return a valid json of commands back', async () => {
+  describe("sendCommand", () => {
+    it("should send a command", async () => {
       // Arrange
-      jest.spyOn(commandService, 'getCommands').mockImplementation(() => {
+      jest.spyOn(commandService, "sendCommand").mockImplementation(() => {
         return {
-          test: {
-            name: "Test",
-            description: "Test Impl",
-            parameters: []
-          }
-        }
+          executed_provider: "testCommand",
+          status: CommandStatus.SUCCESS,
+          message: "Test passed",
+        };
       });
 
       // Act
-      const result = commandController.getCommands()
+      const result = commandResolver.sendCommand({
+        command: PossibleCommand.HUE,
+        data: "",
+      });
 
       // Assert
       expect(result).toEqual({
-        test: {
-          name: "Test",
-          description: "Test Impl",
-          parameters: []
-        }
-      });
-    });
-  });
-
-  describe('sendCommand', () => {
-    it('should send a command', async () => {
-      // Arrange
-      jest.spyOn(commandService, 'sendCommand').mockImplementation(() => {
-        return {
-          executed_command: 'testCommand',
-          status: CommandStatus.PASSED,
-          message: "Test passed"
-        }
-      });
-
-      // Act
-      const result = commandController.sendCommand({ command: 'testCommand', args: [] })
-
-      // Assert
-      expect(result).toEqual({
-        executed_command: 'testCommand',
-        status: CommandStatus.PASSED,
-        message: "Test passed"
+        executed_provider: "testCommand",
+        status: CommandStatus.SUCCESS,
+        message: "Test passed",
       });
     });
   });

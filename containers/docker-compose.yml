@@ -8,5 +8,5 @@ services:
       - "3000:3000"
     container_name: api
     volumes:
-      - ./api:/usr/src/app
+      - ./api/:/usr/src/app
       - /usr/src/app/node_modules

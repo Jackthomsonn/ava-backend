@@ -28,7 +28,7 @@ build-containers:
 
 docker-compose:
 	$(call header, Running containers...)
-	(cd containers && docker compose build && docker compose up)
+	(cd containers && docker compose up --build)
 
 unit-tests:
 	$(call header, Running unit tests...)

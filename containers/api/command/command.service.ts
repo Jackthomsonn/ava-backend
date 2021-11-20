@@ -1,28 +1,29 @@
-import { Injectable } from '@nestjs/common';
-import { SendCommand, SendCommandResponse, CommandStatus, GetCommandResponse } from '../shared/types/command';
+import { Injectable } from "@nestjs/common";
+import {
+  SendCommandResponse,
+  PossibleCommand,
+  SendCommandInput,
+} from "./types/command";
+import { HueProvider } from "./providers/hue/hue";
+import { SensorProvider } from "./providers/sensor/sensor";
+import { SonosProvider } from "./providers/sonos/sonos";
 
 @Injectable()
 export class CommandService {
-  getCommands(): GetCommandResponse {
-    return {
-      lightOn: {
-        name: 'lightOn',
-        description: 'Turns on the light',
-        parameters: [],
-      },
-      lightOff: {
-        name: 'lightOff',
-        description: 'Turns off the light',
-        parameters: [],
-      },
-    }
+  sendCommand(request: SendCommandInput): SendCommandResponse {
+    const provider = this.getProviderImpl(request.command);
+
+    return provider.run(request.data);
   }
 
-  sendCommand(data: SendCommand): SendCommandResponse {
-    return {
-      executed_command: data.command,
-      status: CommandStatus.PASSED,
-      message: 'Command sent',
+  private getProviderImpl(command: PossibleCommand) {
+    switch (command) {
+      case PossibleCommand.HUE:
+        return new HueProvider();
+      case PossibleCommand.SONOS:
+        return new SonosProvider();
+      case PossibleCommand.SENSOR:
+        return new SensorProvider();
     }
   }
 }
