@@ -29,7 +29,7 @@ export class CommandResolver {
   @Mutation(() => SendCommandResponse, {
     description: "Send a command to the device",
   })
-  async sendCommand(@Args("command") commandInput: SendCommandInput) {
+  sendCommand(@Args("command") commandInput: SendCommandInput) {
     return this.commandService.sendCommand(commandInput);
   }
 }

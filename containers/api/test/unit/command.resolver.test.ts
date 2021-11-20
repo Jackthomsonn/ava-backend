@@ -1,9 +1,9 @@
 import { CommandStatus, PossibleCommand } from "../../command/types/command";
 
 import { CommandService } from "../../command/command.service";
-import { CommandResolver } from "command/command.resolver";
+import { CommandResolver } from "../../command/command.resolver";
 
-describe("CommandController", () => {
+describe("CommandResolver", () => {
   let commandResolver: CommandResolver;
   let commandService: CommandService;
 
@@ -25,7 +25,7 @@ describe("CommandController", () => {
 
       // Act
       const result = commandResolver.sendCommand({
-        command: PossibleCommand.HUE,
+        command: PossibleCommand.SENSOR,
         data: "",
       });
 
