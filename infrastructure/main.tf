@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/google"
       version = "3.5.0"
     }
+    auth0 = {
+      source  = "alexkappa/auth0"
+      version = "~> 0.16.0"
+    }
   }
 }
 
@@ -13,6 +17,65 @@ provider "google-beta" {
   project = var.project
   region  = var.region
   zone    = var.zone
+}
+
+provider "auth0" {
+  domain        = var.auth0_domain
+  client_id     = var.auth0_client_id
+  client_secret = var.auth0_client_secret
+}
+
+# Create the SPA application for AVA
+module "ava_spa" {
+  source = "./modules/auth0-client"
+
+  name   = "Ava Spa"
+  is_first_party = true
+  description = "The SPA for Ava"
+  app_type = "spa"
+  callbacks = ["http://localhost:3000/callback"]
+}
+
+# Create connections here
+module "main_auth0_connection" {
+  source = "./modules/auth0-connection"
+
+  name   = "main-connection"
+  strategy = "auth0"
+  enabled_clients = [module.ava_spa.id, var.auth0_client_id]
+}
+
+# Create the different resources for AVA here. Currently only ther AVA api exists
+module "ava_api" {
+  source = "./modules/auth0-resource"
+
+  name   = "Ava API"
+  identifier = "https://api-route.com"
+  skip_consent_for_verifiable_first_party_clients = true
+  scopes = [{
+    name = "send:command"
+    description = "Send commands to Ava"
+  },
+  {
+    name = "get:command"
+    description = "Get commands for Ava"
+  }]
+}
+
+# Create roles here
+module "admin_role" {
+  source = "./modules/auth0-role"
+
+  name   = "admin"
+  description = "The administrator role"
+  permissions = [{
+    name = "send:command"
+    resource_server_identifier = module.ava_api.identifier
+  },
+  {
+    name = "get:command"
+    resource_server_identifier = module.ava_api.identifier
+  }]
 }
 
 module "project_services" {
