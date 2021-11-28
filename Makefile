@@ -1,6 +1,7 @@
 WORKSPACE ?= dev
 PROJECT ?= ava-ai-322720
 REGION ?= us-central1
+REBUILD ?=
 
 define header
   $(info $(START)▶▶▶ $(1)$(END))
@@ -28,7 +29,7 @@ build-containers:
 
 docker-compose:
 	$(call header, Running containers...)
-	(cd containers && docker compose up --build)
+	(cd containers && docker compose up $(if $(REBUILD), --build))
 
 unit-tests:
 	$(call header, Running unit tests...)

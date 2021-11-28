@@ -41,3 +41,7 @@ type SendCommandResponse {
   """The status of the executed command"""
   status: String!
 }
+
+type Subscription {
+  commandSent: Command!
+}

@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
-import { CommandResolver } from "./command/command.resolver";
 import { join } from "path";
 import { CommandModule } from "./command/command.module";
 
@@ -11,6 +10,10 @@ import { CommandModule } from "./command/command.module";
       playground: true,
       autoSchemaFile: join(process.cwd(), "schema.gql"),
       sortSchema: true,
+      installSubscriptionHandlers: true,
+      context: ({ req }) => {
+        return { request: req };
+      },
     }),
   ],
 })

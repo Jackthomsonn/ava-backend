@@ -1,4 +1,4 @@
-import { Args, Query, Mutation, Resolver } from "@nestjs/graphql";
+import { Args, Query, Mutation, Resolver, Subscription } from "@nestjs/graphql";
 import {
   Command,
   PossibleCommand,
@@ -6,12 +6,19 @@ import {
   SendCommandResponse,
 } from "./types/command";
 import { CommandService } from "./command.service";
+import { PubSub } from "graphql-subscriptions";
+import { UseGuards } from "@nestjs/common";
+import { AuthGuard } from "../shared/guards/auth";
 
 @Resolver()
 export class CommandResolver {
-  constructor(private commandService: CommandService) {}
+  private pubsub: PubSub;
+  constructor(private commandService: CommandService) {
+    this.pubsub = new PubSub();
+  }
 
   @Query(() => [Command], { description: "Get all command providers" })
+  @UseGuards(AuthGuard({ permissions: ["get:command"] }))
   async getProviders() {
     return [
       {
@@ -29,7 +36,18 @@ export class CommandResolver {
   @Mutation(() => SendCommandResponse, {
     description: "Send a command to the device",
   })
+  @UseGuards(AuthGuard({ permissions: ["send:command"] }))
   sendCommand(@Args("command") commandInput: SendCommandInput) {
+    this.pubsub.publish("commandSent", {
+      commandSent: { name: "Hue" } as Command,
+    });
+
     return this.commandService.sendCommand(commandInput);
+  }
+
+  @Subscription(() => Command)
+  @UseGuards(AuthGuard({ permissions: ["get:command"] }))
+  commandSent() {
+    return this.pubsub.asyncIterator("commandSent");
   }
 }
