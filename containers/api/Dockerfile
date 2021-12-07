@@ -14,7 +14,7 @@ COPY . .
 
 RUN npm run build
 
-ENV PORT=3000
+ENV PORT=3001
 
 EXPOSE $PORT
 

@@ -12,6 +12,7 @@ resource "auth0_client" "auth0-client" {
   description     = var.description
   app_type        = var.app_type
   callbacks       = var.callbacks
+  allowed_logout_urls = var.allowed_logout_urls
   oidc_conformant = true
   token_endpoint_auth_method = var.token_endpoint_auth_method
 

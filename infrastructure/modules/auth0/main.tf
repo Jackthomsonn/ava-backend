@@ -16,13 +16,14 @@ module "ava_api" {
 }
 
 # Applications
-module "ava_spa" {
+module "ava_app" {
   source = "../auth0-client"
 
-  name   = "Ava Spa"
-  description = "The SPA for Ava"
-  app_type = "spa"
-  callbacks = ["http://localhost:3000/callback"]
+  name   = "Ava App"
+  description = "The web app for Ava"
+  app_type = "regular_web"
+  callbacks = ["http://localhost:3000/api/auth/callback"]
+  allowed_logout_urls = ["http://localhost:3000"]
   token_endpoint_auth_method = "client_secret_post"
 }
 
@@ -47,7 +48,7 @@ module "main_auth0_connection" {
 
   name   = "main-connection"
   strategy = "auth0"
-  enabled_clients = [module.ava_spa.id]
+  enabled_clients = [module.ava_app.id]
 }
 
 #Roles

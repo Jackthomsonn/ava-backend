@@ -25,6 +25,12 @@ variable "callbacks" {
   default = []
 }
 
+variable "allowed_logout_urls" {
+  type = list(string)
+  description = "The allowed logout URLs for the app"
+  default = []
+}
+
 variable "token_endpoint_auth_method" {
   type = string
   description = "The token endpoint authentication method"

@@ -46,7 +46,6 @@ export class CommandResolver {
   }
 
   @Subscription(() => Command)
-  @UseGuards(AuthGuard({ permissions: ["get:command"] }))
   commandSent() {
     return this.pubsub.asyncIterator("commandSent");
   }
