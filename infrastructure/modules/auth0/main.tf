@@ -22,8 +22,8 @@ module "ava_app" {
   name   = "Ava App"
   description = "The web app for Ava"
   app_type = "regular_web"
-  callbacks = ["http://localhost:3000/api/auth/callback"]
-  allowed_logout_urls = ["http://localhost:3000"]
+  callbacks = ["http://localhost:3000/api/auth/callback", "https://ava-app.vercel.app/api/auth/callback"]
+  allowed_logout_urls = ["http://localhost:3000", "https://ava-app.vercel.app"]
   token_endpoint_auth_method = "client_secret_post"
 }
 
