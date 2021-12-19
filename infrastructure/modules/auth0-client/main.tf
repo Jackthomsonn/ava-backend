@@ -16,6 +16,12 @@ resource "auth0_client" "auth0-client" {
   oidc_conformant = true
   token_endpoint_auth_method = var.token_endpoint_auth_method
 
+  lifecycle {
+    ignore_changes = [
+      custom_login_page_preview
+    ]
+  }
+
   jwt_configuration {
     alg = "RS256"
   }

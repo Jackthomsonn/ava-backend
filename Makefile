@@ -40,3 +40,11 @@ deploy-api: set-project
 	docker build containers/api -t gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
 	docker push gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
 	gcloud run deploy $(WORKSPACE)-api --image=gcr.io/$(PROJECT)/$(WORKSPACE)-api --region $(REGION) --platform managed --allow-unauthenticated
+
+run-migrations-api:
+	$(call header, Running migrations for api for project $(PROJECT) in workspace $(WORKSPACE)...)
+	cd containers/api && npx prisma migrate dev
+
+decrypt-sops-api:
+	$(call header, Decrypting sops files for api for project $(PROJECT) in workspace $(WORKSPACE)...)
+	(sops -d ./secrets/$(WORKSPACE).yaml -> ./containers/api/.env-f)
