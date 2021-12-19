@@ -1,0 +1,2 @@
+creation_rules:
+  - gcp_kms: projects/ava-ai-322720/locations/us-central1/keyRings/ava-keyring/cryptoKeys/ava-main

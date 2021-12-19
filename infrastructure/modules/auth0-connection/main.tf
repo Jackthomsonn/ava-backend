@@ -13,6 +13,7 @@ resource "auth0_connection" "connection" {
   options {
     password_policy        = "excellent"
     brute_force_protection = true
+    disable_signup = var.disable_signup
   }
   enabled_clients = var.enabled_clients
 }

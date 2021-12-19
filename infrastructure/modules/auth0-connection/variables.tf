@@ -13,3 +13,9 @@ variable "enabled_clients" {
   type = list(string)
   description = "The enabled clients for the connection"
 }
+
+variable "disable_signup" {
+  type = bool
+  description = "Whether signup is disabled for the connection"
+  default = true
+}

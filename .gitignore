@@ -6,3 +6,4 @@ infrastructure/terraform.tfstate.d/dev/terraform.tfstate.backup
 infrastructure/.terraform.lock.hcl
 infrastructure/terraform.tfstate.d/dev/terraform.tfstate
 infrastructure/terraform.tfstate
+secrets/.decrypted~*.yaml

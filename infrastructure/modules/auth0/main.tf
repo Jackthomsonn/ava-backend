@@ -27,21 +27,6 @@ module "ava_app" {
   token_endpoint_auth_method = "client_secret_post"
 }
 
-module "ava_api_explorer" {
-  source = "../auth0-client"
-  
-  name = "Ava API Explorer"
-  description = "The API Explorer for Ava"
-  app_type = "non_interactive"
-  token_endpoint_auth_method = "client_secret_post"
-
-  client_grants = [{
-      client_id = module.ava_api_explorer.id
-      audience  = module.ava_api.identifier
-      scope = ["send:command", "get:command"]
-  }]
-}
-
 # Connections (database)
 module "main_auth0_connection" {
   source = "../auth0-connection"

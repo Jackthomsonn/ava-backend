@@ -8,6 +8,10 @@ terraform {
       source  = "alexkappa/auth0"
       version = "~> 0.16.0"
     }
+    sops = {
+      source = "carlpett/sops"
+      version = "~> 0.5"
+    }
   }
 }
 
@@ -19,10 +23,14 @@ provider "google-beta" {
   zone    = var.zone
 }
 
+data "sops_file" "secrets" {
+  source_file = "../secrets/${terraform.workspace}.yaml"
+}
+
 provider "auth0" {
-  domain        = var.auth0_domain
-  client_id     = var.auth0_client_id
-  client_secret = var.auth0_client_secret
+  domain        = data.sops_file.secrets.data["auth0_domain"]
+  client_id     = data.sops_file.secrets.data["auth0_client_id"]
+  client_secret = data.sops_file.secrets.data["auth0_client_secret"]
 }
 
 module "auth0" {
@@ -37,6 +45,7 @@ module "project_services" {
   activate_apis = [
     "cloudiot.googleapis.com",
     "run.googleapis.com",
+    "cloudkms.googleapis.com",
   ]
 
   disable_services_on_destroy = true
@@ -87,4 +96,14 @@ module "cloud_run" {
 
   name    = "api"
   project = var.project
+}
+
+module "kms" {
+  source  = "terraform-google-modules/kms/google"
+  version = "~> 1.2"
+
+  project_id         = var.project
+  location           = var.region
+  keyring            = "ava-keyring"
+  keys               = ["ava-main"]
 }
