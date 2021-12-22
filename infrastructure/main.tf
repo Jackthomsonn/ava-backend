@@ -109,83 +109,14 @@ module "kms" {
   keys               = ["ava-main"]
 }
 
-locals {
-  onprem = [data.sops_file.secrets.data["onprem_host"]]
-}
+module "sql" {
+  source = "./modules/sql"
 
-// Setup SQL Instances
-resource "google_sql_database_instance" "ava_main" {
-  name             = "ava-main-${terraform.workspace}"
+  project = var.project
+  region = var.region
+  database_name = "ava"
   database_version = "POSTGRES_11"
-  region           = var.region
-  project = var.project
-
-  settings {
-    tier = "db-f1-micro"
-
-    ip_configuration {
-
-      dynamic "authorized_networks" {
-        for_each = local.onprem
-        iterator = onprem
-
-        content {
-          name  = "onprem-${onprem.key}"
-          value = onprem.value
-        }
-      }
-    }
-  }
-}
-
-resource "google_sql_database_instance" "ava_shadow" {
-  name             = "ava-shadow-${terraform.workspace}"
-  database_version = "POSTGRES_11"
-  region           = var.region
-  project = var.project
-
-  settings {
-    tier = "db-f1-micro"
-
-    ip_configuration {
-
-      dynamic "authorized_networks" {
-        for_each = local.onprem
-        iterator = onprem
-
-        content {
-          name  = "onprem-${onprem.key}"
-          value = onprem.value
-        }
-      }
-    }
-  }
-}
-
-// Setup SQL Database
-resource "google_sql_database" "main_database" {
-  name     = "ava"
-  instance = google_sql_database_instance.ava_main.name
-  project = var.project
-}
-
-resource "google_sql_database" "shadow_database" {
-  name     = "ava"
-  instance = google_sql_database_instance.ava_shadow.name
-  project = var.project
-}
-
-// Setup SQL users
-resource "google_sql_user" "main_users" {
-  name     = data.sops_file.secrets.data["POSTGRESQL_USER"]
-  instance = google_sql_database_instance.ava_main.name
-  password = data.sops_file.secrets.data["POSTGRESQL_PASSWORD"]
-  project = var.project
-}
-
-resource "google_sql_user" "shadow_users" {
-  name     = data.sops_file.secrets.data["POSTGRESQL_USER"]
-  instance = google_sql_database_instance.ava_shadow.name
-  password = data.sops_file.secrets.data["POSTGRESQL_PASSWORD"]
-  project = var.project
+  db_user = data.sops_file.secrets.data["POSTGRES_USER"]
+  db_password = data.sops_file.secrets.data["POSTGRES_PASSWORD"]
+  allowed_ips = [data.sops_file.secrets.data["onprem_host"]]
 }

@@ -1,5 +1,5 @@
-## Formatting yaml to env format
+## Decrypt credentials and set .env file
 
 ```bash
-sed -e 's/: /="/;s/$/"/g' containers/api/.env-f > containers/api/.env
+make decrypt-sops-api && sed -e 's/: /="/;s/$/"/g' containers/api/.env-f > containers/api/.env
 ```
