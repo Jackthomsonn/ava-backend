@@ -47,21 +47,20 @@ unit-tests:
 	$(call header, Running unit tests...)
 	(cd containers/api && npx jest)
 
-deploy-api: set-project
+deploy-api: set-project decrypt-sops-api
 	$(call header, Deploy api for project $(PROJECT) in workspace $(WORKSPACE)...)
+	sed -e 's/: /="/;s/$/"/g' containers/api/.env-f > containers/api/.env
 	docker build containers/api -t gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
 	docker push gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
 	gcloud run deploy $(WORKSPACE)-api --image=gcr.io/$(PROJECT)/$(WORKSPACE)-api --region $(REGION) --platform managed --allow-unauthenticated
-
-run-migrations-api-dev:
+decrypt-sops-api:
+	$(call header, Decrypting sops files for api for project $(PROJECT) in workspace $(WORKSPACE)...)
+	(sops -d ./secrets/$(WORKSPACE).yaml -> ./containers/api/.env-f)
+run-migrations-api:
 	$(call header, Running migrations for api for project $(PROJECT) in workspace $(WORKSPACE)...)
-	cd containers/api && npx prisma migrate dev
 	@if [ "$(WORKSPACE)" = "dev" ]; then\
-		sops -d ./secrets/$(WORKSPACE).yaml -> ./containers/api/.env-f && cd containers/api && npx prisma migrate deploy;\
+		cd containers/api && npx prisma migrate dev;\
 	fi
-
-run-migrations-api-prod:
-	$(call header, Running migrations for api for project $(PROJECT) in workspace $(WORKSPACE)...)
 	@if [ "$(WORKSPACE)" = "prod" ]; then\
-		sops -d ./secrets/$(WORKSPACE).yaml -> ./containers/api/.env-f && cd containers/api && npx prisma migrate deploy;\
+		cd containers/api npx prisma migrate deploy;\
 	fi
