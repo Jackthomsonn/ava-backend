@@ -46,7 +46,8 @@ module "project_services" {
     "cloudiot.googleapis.com",
     "run.googleapis.com",
     "cloudkms.googleapis.com",
-    "servicenetworking.googleapis.com"
+    "servicenetworking.googleapis.com",
+    "sqladmin.googleapis.com"
   ]
 
   disable_services_on_destroy = true

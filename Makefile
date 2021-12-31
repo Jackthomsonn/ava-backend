@@ -39,8 +39,9 @@ build-containers:
 	$(call header, Building containers...)
 	(cd containers/api && tsc)
 
-docker-compose: decrypt-sops-api
+docker-compose:
 	$(call header, Running containers...)
+	(sops -d ./secrets/local.yaml -> ./containers/api/.env-temp)
 	node scripts/sed.js
 	(cd containers && docker compose up $(if $(REBUILD), --build))
 

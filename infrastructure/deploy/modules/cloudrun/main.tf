@@ -6,7 +6,8 @@ module "cloud_run_service_account" {
   description  = "Service account for ${var.name} Cloud Run instance"
   names        = ["${var.name}cloudrun-${terraform.workspace}"]
   project_roles = [
-    "${var.project}=>roles/run.admin"
+    "${var.project}=>roles/run.admin",
+    "${var.project}=>roles/cloudsql.client"
   ]
 }
 
