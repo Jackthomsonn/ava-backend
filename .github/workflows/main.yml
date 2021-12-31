@@ -34,6 +34,12 @@ jobs:
       - name: Setup Docker
         run: gcloud auth configure-docker -q
 
+      - name: Decrypt secrets
+        run: make decrypt-sops-api
+
+      - name: Generate environment variables
+        run: node scripts/sed.js
+
       - name: Apply migrations
         run: make run-migrations-api WORKSPACE=prod
 
