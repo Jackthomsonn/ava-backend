@@ -28,6 +28,7 @@ module "ci_cd_service_account" {
     "${var.project}=>roles/storage.objectViewer",
     "${var.project}=>roles/storage.admin",
     "${var.project}=>roles/iam.serviceAccountUser",
+    "${var.project}=>roles/cloudkms.cryptoKeyDecrypter",
   ]
 }
 
