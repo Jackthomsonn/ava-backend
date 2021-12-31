@@ -2,7 +2,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "3.5.0"
+      version = "4.5.0"
     }
     auth0 = {
       source  = "alexkappa/auth0"
@@ -63,13 +63,6 @@ module "iot_core" {
   state_push_endpoint = "https://example.${terraform.workspace}.com/state"
 }
 
-module "cloud_run" {
-  source = "./modules/cloudrun"
-
-  name    = "api"
-  project = var.project
-}
-
 module "sql" {
   source = "./modules/sql"
 
@@ -80,4 +73,12 @@ module "sql" {
   db_user = data.sops_file.secrets.data["POSTGRES_USER"]
   db_password = data.sops_file.secrets.data["POSTGRES_PASSWORD"]
   allowed_ips = [data.sops_file.secrets.data["onprem_host"]]
+}
+
+module "cloud_run" {
+  source = "./modules/cloudrun"
+
+  name    = "api"
+  project = var.project
+  sql_instance = module.sql.connection_name
 }

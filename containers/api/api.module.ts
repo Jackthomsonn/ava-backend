@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { join } from "path";
-import { CommandModule } from "./command/command.module";
+import { DeviceModule } from "./device/device.module";
 
 @Module({
   imports: [
-    CommandModule,
+    DeviceModule,
     GraphQLModule.forRoot({
-      playground: true,
+      playground: process.env.PLAYGROUND_ENABLED === "true",
       autoSchemaFile: join(process.cwd(), "schema.gql"),
       sortSchema: true,
       installSubscriptionHandlers: true,

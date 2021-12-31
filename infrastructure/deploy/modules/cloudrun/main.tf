@@ -31,6 +31,12 @@ resource "google_cloud_run_service" "default" {
       }
       service_account_name = module.cloud_run_service_account.email
     }
+
+    metadata {
+      annotations = {
+        "run.googleapis.com/cloudsql-instances" = var.sql_instance
+      }
+    }
   }
 
   traffic {
@@ -38,11 +44,7 @@ resource "google_cloud_run_service" "default" {
     latest_revision = true
   }
 
-  lifecycle {
-    ignore_changes = [
-      template
-    ]
-  }
+  autogenerate_revision_name = true
 }
 
 resource "google_cloud_run_service_iam_policy" "noauth" {

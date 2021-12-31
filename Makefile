@@ -39,8 +39,9 @@ build-containers:
 	$(call header, Building containers...)
 	(cd containers/api && tsc)
 
-docker-compose:
+docker-compose: decrypt-sops-api
 	$(call header, Running containers...)
+	node scripts/sed.js
 	(cd containers && docker compose up $(if $(REBUILD), --build))
 
 unit-tests:
@@ -49,18 +50,18 @@ unit-tests:
 
 deploy-api: set-project decrypt-sops-api
 	$(call header, Deploy api for project $(PROJECT) in workspace $(WORKSPACE)...)
-	sed -e 's/: /="/;s/$/"/g' containers/api/.env-f > containers/api/.env
-	docker build containers/api -t gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
+	node scripts/sed.js
+	docker build containers/api $(if "$(WORKSPACE)" = "dev", -f ./containers/api/Dockerfile.dev)  -t gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
 	docker push gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
 	gcloud run deploy $(WORKSPACE)-api --image=gcr.io/$(PROJECT)/$(WORKSPACE)-api --region $(REGION) --platform managed --allow-unauthenticated
 decrypt-sops-api:
 	$(call header, Decrypting sops files for api for project $(PROJECT) in workspace $(WORKSPACE)...)
-	(sops -d ./secrets/$(WORKSPACE).yaml -> ./containers/api/.env-f)
+	(sops -d ./secrets/$(WORKSPACE).yaml -> ./containers/api/.env-temp)
 run-migrations-api:
 	$(call header, Running migrations for api for project $(PROJECT) in workspace $(WORKSPACE)...)
 	@if [ "$(WORKSPACE)" = "dev" ]; then\
 		cd containers/api && npx prisma migrate dev;\
 	fi
 	@if [ "$(WORKSPACE)" = "prod" ]; then\
-		cd containers/api npx prisma migrate deploy;\
+		cd containers/api && npx prisma migrate deploy;\
 	fi

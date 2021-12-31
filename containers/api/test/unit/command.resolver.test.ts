@@ -1,40 +1,40 @@
-import { CommandStatus, PossibleCommand } from "../../command/types/command";
+// import { CommandStatus, PossibleCommand } from "../../device/types/command";
 
-import { CommandService } from "../../command/command.service";
-import { CommandResolver } from "../../command/command.resolver";
+// import { CommandService } from "../../device/device.service";
+// import { CommandResolver } from "../../device/device.resolver";
 
-describe("CommandResolver", () => {
-  let commandResolver: CommandResolver;
-  let commandService: CommandService;
+// describe("CommandResolver", () => {
+//   let commandResolver: CommandResolver;
+//   let commandService: CommandService;
 
-  beforeEach(() => {
-    commandService = new CommandService();
-    commandResolver = new CommandResolver(commandService);
-  });
+//   beforeEach(() => {
+//     commandService = new CommandService();
+//     commandResolver = new CommandResolver(commandService);
+//   });
 
-  describe("sendCommand", () => {
-    it("should send a command", async () => {
-      // Arrange
-      jest.spyOn(commandService, "sendCommand").mockImplementation(() => {
-        return {
-          executed_provider: "testCommand",
-          status: CommandStatus.SUCCESS,
-          message: "Test passed",
-        };
-      });
+//   describe("sendCommand", () => {
+//     it("should send a command", async () => {
+//       // Arrange
+//       jest.spyOn(commandService, "sendCommand").mockImplementation(() => {
+//         return {
+//           executed_provider: "testCommand",
+//           status: CommandStatus.SUCCESS,
+//           message: "Test passed",
+//         };
+//       });
 
-      // Act
-      const result = commandResolver.sendCommand({
-        command: PossibleCommand.SENSOR,
-        data: "",
-      });
+//       // Act
+//       const result = commandResolver.sendCommand({
+//         command: PossibleCommand.SENSOR,
+//         data: "",
+//       });
 
-      // Assert
-      expect(result).toEqual({
-        executed_provider: "testCommand",
-        status: CommandStatus.SUCCESS,
-        message: "Test passed",
-      });
-    });
-  });
-});
+//       // Assert
+//       expect(result).toEqual({
+//         executed_provider: "testCommand",
+//         status: CommandStatus.SUCCESS,
+//         message: "Test passed",
+//       });
+//     });
+//   });
+// });

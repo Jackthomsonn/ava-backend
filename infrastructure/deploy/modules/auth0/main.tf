@@ -6,12 +6,8 @@ module "ava_api" {
   identifier = "https://api-route.com"
   skip_consent_for_verifiable_first_party_clients = true
   scopes = [{
-    name = "send:command"
-    description = "Send commands to Ava"
-  },
-  {
-    name = "get:command"
-    description = "Get commands for Ava"
+    name = "get:devices"
+    description = "Get all devices"
   }]
 }
 
@@ -43,11 +39,7 @@ module "admin_role" {
   name   = "admin"
   description = "The administrator role"
   permissions = [{
-    name = "send:command"
-    resource_server_identifier = module.ava_api.identifier
-  },
-  {
-    name = "get:command"
+    name = "get:devices"
     resource_server_identifier = module.ava_api.identifier
   }]
 }

@@ -7,7 +7,7 @@ import { AvaLogger } from "./shared/loggers/logger";
 async function bootstrap() {
   const logger = new AvaLogger();
 
-  logger.setLogLevels(["log", "warn"])
+  logger.setLogLevels(["log", "warn"]);
 
   const app = await NestFactory.create(APIModule, { logger });
 

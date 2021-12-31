@@ -2,46 +2,54 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Command {
-  """The name of the command"""
+input CreateDeviceInputType {
+  """The name of the device"""
   name: String!
+
+  """The type of the device"""
+  type: DeviceType!
 }
 
-type Mutation {
-  """Send a command to the device"""
-  sendCommand(command: SendCommandInput!): SendCommandResponse!
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type DeviceObjectType {
+  """When the device was created"""
+  createdAt: DateTime!
+
+  """The id of the device"""
+  id: String!
+
+  """The name of the device"""
+  name: String!
+
+  """The type of the device"""
+  type: DeviceType!
+
+  """When the device was updated"""
+  updatedAt: DateTime!
 }
 
-enum PossibleCommand {
+type DeviceResponse {
+  """The created device"""
+  device: DeviceObjectType!
+}
+
+enum DeviceType {
   HUE
-  SENSOR
+  NONE
+  PLUG
   SONOS
 }
 
+type Mutation {
+  """Create a new device"""
+  createDevice(device: CreateDeviceInputType!): DeviceResponse!
+}
+
 type Query {
-  """Get all command providers"""
-  getProviders: [Command!]!
-}
-
-input SendCommandInput {
-  """The name of the command"""
-  command: PossibleCommand!
-
-  """The data for this specific device. Must be supplied as a string"""
-  data: String!
-}
-
-type SendCommandResponse {
-  """The name of the executed provider"""
-  executed_provider: String!
-
-  """The message of the executed command"""
-  message: String!
-
-  """The status of the executed command"""
-  status: String!
-}
-
-type Subscription {
-  commandSent: Command!
+  """Get all devices"""
+  getDevices: [DeviceObjectType!]!
 }

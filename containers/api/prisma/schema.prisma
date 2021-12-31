@@ -7,9 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Command {
+enum DeviceType {
+  PLUG
+  HUE
+  SONOS
+  NONE
+}
+
+model Device {
   id        String @id @default(cuid())
-  name      String
+  name      String @unique()
+  type DeviceType @default(NONE)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }

@@ -34,5 +34,8 @@ jobs:
       - name: Setup Docker
         run: gcloud auth configure-docker -q
 
+      - name: Apply migrations
+        run: make run-migrations-api WORKSPACE=prod
+
       - name: Deploy API
         run: make deploy-api WORKSPACE=prod
