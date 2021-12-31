@@ -51,7 +51,11 @@ unit-tests:
 deploy-api: set-project decrypt-sops-api
 	$(call header, Deploy api for project $(PROJECT) in workspace $(WORKSPACE)...)
 	node scripts/sed.js
-	docker build containers/api $(if "$(WORKSPACE)" = "dev", -f ./containers/api/Dockerfile.dev)  -t gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
+ifeq ($(WORKSPACE), dev)
+	docker build containers/api -f ./containers/api/Dockerfile.dev -t gcr.io/$(PROJECT)/$(WORKSPACE)-api
+else
+	docker build containers/api -t gcr.io/$(PROJECT)/$(WORKSPACE)-api
+endif
 	docker push gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
 	gcloud run deploy $(WORKSPACE)-api --image=gcr.io/$(PROJECT)/$(WORKSPACE)-api --region $(REGION) --platform managed --allow-unauthenticated
 decrypt-sops-api:
