@@ -6,9 +6,9 @@
   "author": "Jack Thomson <hello@jackthomson.co.uk> (http://www.jackthomson.co.uk)",
   "license": "ISC",
   "scripts": {
-    "build": "npx tsc",
+    "build": "prisma generate && npx tsc",
     "start": "prisma generate && nest start",
-    "start:prod": "prisma generate && node dist/main.js"
+    "start:prod": "node dist/main.js"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
