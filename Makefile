@@ -11,6 +11,7 @@ set-project:
 	$(call header, "Setting project to $(PROJECT)...")
 	gcloud config set project $(PROJECT)
 
+# Terraform
 tf-init-deploy:
 	$(call header, Initializing terraform for deploy in $(WORKSPACE)...)
 	(cd infrastructure/deploy && terraform workspace select $(WORKSPACE) && terraform init)
@@ -22,7 +23,6 @@ tf-plan-deploy:
 tf-apply-deploy:
 	$(call header, Applying plan for deploy in $(WORKSPACE)...)
 	(cd infrastructure/deploy && terraform apply)
-
 tf-init-core:
 	$(call header, Initializing terraform for core...)
 	(cd infrastructure/core && terraform workspace select core && terraform init)
@@ -35,20 +35,18 @@ tf-apply-core:
 	$(call header, Applying plan for core...)
 	(cd infrastructure/core && terraform apply)
 
-build-containers:
-	$(call header, Building containers...)
-	(cd containers/api && tsc)
-
+# Local development
 docker-compose:
 	$(call header, Running containers...)
 	(sops -d ./secrets/local.yaml -> ./containers/api/.env-temp)
 	node scripts/sed.js
 	(cd containers && docker compose up $(if $(REBUILD), --build))
 
-unit-tests:
+unit-tests-api:
 	$(call header, Running unit tests...)
 	(cd containers/api && npx jest)
 
+# API specific commands
 deploy-api: set-project decrypt-sops-api
 	$(call header, Deploy api for project $(PROJECT) in workspace $(WORKSPACE)...)
 	node scripts/sed.js
@@ -59,9 +57,11 @@ else
 endif
 	docker push gcr.io/$(PROJECT)/$(WORKSPACE)-api && \
 	gcloud run deploy $(WORKSPACE)-api --image=gcr.io/$(PROJECT)/$(WORKSPACE)-api --region $(REGION) --platform managed --allow-unauthenticated
+
 decrypt-sops-api:
 	$(call header, Decrypting sops files for api for project $(PROJECT) in workspace $(WORKSPACE)...)
 	(sops -d ./secrets/$(WORKSPACE).yaml -> ./containers/api/.env-temp)
+
 run-migrations-api:
 	$(call header, Running migrations for api for project $(PROJECT) in workspace $(WORKSPACE)...)
 	@if [ "$(WORKSPACE)" = "dev" ]; then\

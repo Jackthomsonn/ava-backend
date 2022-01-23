@@ -7,6 +7,13 @@ resource "google_sql_database_instance" "database" {
   settings {
     tier = "db-f1-micro"
 
+    availability_type = terraform.workspace == "prod" ? "REGIONAL" : "ZONAL"
+
+    backup_configuration {
+      enabled            = terraform.workspace == "prod" ? true : false
+      location = "us-west1"
+    }
+
     ip_configuration {
       ipv4_enabled = true
 

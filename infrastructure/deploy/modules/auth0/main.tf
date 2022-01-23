@@ -21,6 +21,11 @@ module "ava_app" {
   callbacks = ["http://localhost:3000/api/auth/callback", "https://ava-app.vercel.app/api/auth/callback"]
   allowed_logout_urls = ["http://localhost:3000", "https://ava-app.vercel.app"]
   token_endpoint_auth_method = "client_secret_post"
+  client_grants = [{
+    client_id = module.ava_app.id
+    audience = module.ava_api.identifier
+    scope = ["get:devices"]
+  }]
 }
 
 # Connections (database)

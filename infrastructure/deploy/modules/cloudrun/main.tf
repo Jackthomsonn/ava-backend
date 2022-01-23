@@ -36,6 +36,7 @@ resource "google_cloud_run_service" "default" {
     metadata {
       annotations = {
         "run.googleapis.com/cloudsql-instances" = var.sql_instance
+        "autoscaling.knative.dev/maxScale" = 100
       }
     }
   }

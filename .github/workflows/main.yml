@@ -46,3 +46,33 @@ jobs:
 
       - name: Deploy API
         run: make deploy-api WORKSPACE=prod
+
+  run-migrations:
+    needs: ["deploy", "unit-tests"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Setup Docker
+        run: gcloud auth configure-docker -q
+
+      - name: Install Sops
+        uses: mdgreenwald/mozilla-sops-action@v1.1.0
+        id: install-sops
+
+      - name: Decrypt secrets
+        run: make decrypt-sops-api
+
+      - name: Generate environment variables
+        run: node scripts/sed.js
+
+      - name: Run migrations
+        run: make run-migrations-api WORKSPACE=prod
