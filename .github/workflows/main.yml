@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
 jobs:
-  unit-tests:
+  unit-tests-api:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -15,10 +15,10 @@ jobs:
           cd containers/api &&
           npm i &&
           cd ../../ &&
-          make unit-tests
+          make unit-tests-api
 
-  deploy:
-    needs: unit-tests
+  deploy-api:
+    needs: unit-tests-api
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -48,7 +48,7 @@ jobs:
         run: make deploy-api WORKSPACE=prod
 
   run-migrations:
-    needs: ["deploy", "unit-tests"]
+    needs: ["deploy-api", "unit-tests-api"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
