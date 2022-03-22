@@ -5,8 +5,8 @@ terraform {
       version = "4.5.0"
     }
     auth0 = {
-      source  = "alexkappa/auth0"
-      version = "~> 0.16.0"
+      source  = "auth0/auth0"
+      version = "0.17.1"
     }
     sops = {
       source = "carlpett/sops"
